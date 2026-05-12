@@ -1,7 +1,7 @@
 package com.fitness.userservice.controller;
 
-import com.fitness.userservice.controller.dto.RegisterRequest;
-import com.fitness.userservice.controller.dto.UserResponse;
+import com.fitness.userservice.dto.RegisterRequest;
+import com.fitness.userservice.dto.UserResponse;
 import com.fitness.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

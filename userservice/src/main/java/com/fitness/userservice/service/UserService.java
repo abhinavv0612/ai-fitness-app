@@ -1,7 +1,7 @@
 package com.fitness.userservice.service;
 
-import com.fitness.userservice.controller.dto.RegisterRequest;
-import com.fitness.userservice.controller.dto.UserResponse;
+import com.fitness.userservice.dto.RegisterRequest;
+import com.fitness.userservice.dto.UserResponse;
 import com.fitness.userservice.model.User;
 import com.fitness.userservice.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -19,7 +19,17 @@ public class UserService {
 
         if(repository.existsByEmail(request.getEmail()))  // User already exist in DB
         {
-            throw new RuntimeException("Email already exists");
+            User existingUser = repository.findByEmail(request.getEmail());
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(existingUser.getId());
+            userResponse.setKeycloakId(existingUser.getKeycloakId());
+            userResponse.setEmail(existingUser.getEmail());
+            userResponse.setPassword(existingUser.getPassword());
+            userResponse.setFirstName(existingUser.getFirstName());
+            userResponse.setLastName(existingUser.getLastName());
+            userResponse.setCreatedAt(existingUser.getCreatedAt());
+            userResponse.setUpdatedAt(existingUser.getUpdatedAt());
+            return userResponse;
         }
 
         User user  = new User();
@@ -28,15 +38,16 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
-        User savedUSer = repository.save(user);
+        User savedUser = repository.save(user);
         UserResponse userResponse = new UserResponse();
-        userResponse.setId(savedUSer.getId());
-        userResponse.setEmail(savedUSer.getEmail());
-        userResponse.setPassword(savedUSer.getPassword());
-        userResponse.setFirstName(savedUSer.getFirstName());
-        userResponse.setLastName(savedUSer.getLastName());
-        userResponse.setCreatedAt(savedUSer.getCreatedAt());
-        userResponse.setUpdatedAt(savedUSer.getUpdatedAt());
+        userResponse.setId(savedUser.getId());
+        userResponse.setKeycloakId(savedUser.getKeycloakId());
+        userResponse.setEmail(savedUser.getEmail());
+        userResponse.setPassword(savedUser.getPassword());
+        userResponse.setFirstName(savedUser.getFirstName());
+        userResponse.setLastName(savedUser.getLastName());
+        userResponse.setCreatedAt(savedUser.getCreatedAt());
+        userResponse.setUpdatedAt(savedUser.getUpdatedAt());
         return userResponse;
     }
 
@@ -56,6 +67,6 @@ public class UserService {
     }
 
     public Boolean existByUserId(String userId) {
-        return  repository.existsById(userId);
+        return  repository.existsByKeycloakId(userId);
     }
 }
